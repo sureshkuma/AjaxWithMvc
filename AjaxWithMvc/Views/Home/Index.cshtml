@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@Ajax.ActionLink("click here to get currenet time", "GetCurrentTime", "Home",
+                                                            new AjaxOptions
+                                                            {
+                                                                UpdateTargetId = "idCurrentTime",
+                                                                InsertionMode = InsertionMode.Replace,
+                                                                HttpMethod = "Get",
+                                                                LoadingElementId= "divMessage"
+                                                            })
+
+<div id="idCurrentTime"></div>
+<div id="divMessage" style="border: none;display: none; margin: auto">
+    Please wait ... Getting the Details..
+</div>
+<hr />
+
+@Ajax.ActionLink("click here to get currenet time", "GetCurrentTime", "Home",
+                                                            new AjaxOptions
+                                                            {
+                                                                UpdateTargetId = "idCurrentTime",
+                                                                InsertionMode = InsertionMode.Replace,
+                                                                HttpMethod = "Get",
+                                                               OnFailure="Failure",
+                                                               OnBegin="Begin",
+                                                               OnComplete="Complete"
+                                                            })
+<script type="text/javascript">
+    var ShowMessage = false;
+    function Begin() {
+        ShowMessage = true;
+        setTimeout("if(showMessage) {$(#divMessage).show()}", 500);
+    }
+    function Complete() {
+        ShowMessage = false;
+        $("#divMessage").hide();
+    }
+    function Failure(error) {
+        var response = error.responseText;
+        alert("Error code is [" + error.ErrorCode + "] " + response);
+    }
+</script>
+
+<div>
+    @using (Ajax.BeginForm("ShowMessage", "Home",
+                        new AjaxOptions
+                        {
+                            HttpMethod = "Get",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = "divMessage2"
+                        }))
+    {
+        <input type="text"  name="FirstName"/>
+        <input type="submit"  value="Submit"/>
+    }
+</div>
+<div id="divMessage2"></div>
+<hr />
